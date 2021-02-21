@@ -1,15 +1,16 @@
 import cv2
 import time
 from datetime import datetime, timedelta
+import os
 
 eye = cv2.VideoCapture(0)
 snap_number = 0
 t_start = datetime.now()
 t_start_span = datetime.now()
 t_interval_seconds = 6
-t_span_seconds = 300
+t_span_seconds = 60
 snap_set_size = 9
-repo = "./snaps/"
+repo = os.path.expanduser("~/Desktop/Snaps/")
 
 while True:
     t_now = datetime.now()
@@ -23,7 +24,8 @@ while True:
             print("Got no webcam access. Quitting..")
             break
         else:
-            name = repo + "snap_{}.png".format(snap_number)
+            name = os.path.join(repo, "snap_{}.png".format(snap_number))
+            print(name)
             cv2.imwrite(name, frame) 
             t_start = datetime.now()
     if snap_number > snap_set_size:
