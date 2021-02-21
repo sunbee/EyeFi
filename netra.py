@@ -26,7 +26,14 @@ while True:
         else:
             name = os.path.join(repo, "snap_{}.png".format(snap_number))
             print(name)
-            cv2.imwrite(name, frame) 
+            snap_timestamped = cv2.putText(frame, 
+                                text=t_now.strftime('%d %B, %Y %H:%M:%S'), 
+                                org=(51, 51), 
+                                fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
+                                fontScale=1.2, 
+                                color=(0, 0, 0), 
+                                thickness=2)
+            cv2.imwrite(name, snap_timestamped)
             t_start = datetime.now()
     if snap_number > snap_set_size:
         snap_number = 0
