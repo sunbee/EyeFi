@@ -1,5 +1,2 @@
-opencv-python
-numpy
-scipy
 telegram
 python-telegram-bot
