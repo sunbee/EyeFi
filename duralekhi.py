@@ -4,17 +4,25 @@ from telegram.ext import MessageHandler, Filters
 import logging
 import config
 import os
+ 
+if os.environ.get('BOT'):
+    repo = "/app/snaps"
+    BOT = os.environ.get('BOT')
+else:
+    repo = os.path.expanduser('~/Desktop/Snaps')
+    BOT = "Sanjinator"
 
-repo = os.path.expanduser('~/Desktop/Snaps')
+token = config.TeleTokens.get(BOT)
+    
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', 
                     level=logging.INFO)
 
-updater = Updater(token=config.Sanjinator_TOKEN, use_context=True)
+updater = Updater(token=token, use_context=True)
 dispatcher = updater.dispatcher
 
 def start(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="The Sanjinator whishes you a very good day.")
+    context.bot.send_message(chat_id=update.effective_chat.id, text=f"The {BOT} whishes you a very good day.")
 
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)

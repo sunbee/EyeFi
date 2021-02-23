@@ -8,7 +8,7 @@ snap_number = 0
 t_start = datetime.now()
 t_start_span = datetime.now()
 t_interval_seconds = 6
-t_span_seconds = 60
+t_span_seconds = 600
 snap_set_size = 9
 repo = os.path.expanduser("~/Desktop/Snaps/")
 
