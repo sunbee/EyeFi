@@ -1,5 +1,6 @@
+config.py
+*.ipynb
+__pycache__
 .DS_Store
 .mypy_cache
 .vscode
-config.py
-*.ipynb

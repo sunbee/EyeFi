@@ -1,2 +1,4 @@
 telegram
 python-telegram-bot
+google-cloud-vision
+watchdog

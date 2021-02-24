@@ -33,7 +33,7 @@ def detect_person(snap):
     """
     pass
 
-def mark_person(snap, annot):
+def mark_person(snap, annot, switch_format=True):
     """
     Mark the person or persons in the image.
     Use this command when a person is detected in the snap,
@@ -57,6 +57,8 @@ def mark_person(snap, annot):
     color = (0, 0, 255)
     thickness = 2
     frame = cv2.rectangle(frame, TL, BR, color, thickness)
+    if switch_format:
+        snap = snap.replace("png", "jpeg")
     cv2.imwrite(snap, frame)
 
 def send_notification(snap, message):
