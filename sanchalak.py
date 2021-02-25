@@ -8,7 +8,7 @@ import dhyana
 class Handler(watchdog.events.PatternMatchingEventHandler):
     def __init__(self):
         watchdog.events.PatternMatchingEventHandler.__init__(self, 
-            patterns=['*.png'],
+            patterns=['*.png', '*.jpeg'],
             ignore_directories=True,
             case_sensitive=True
         )
@@ -22,7 +22,8 @@ class Handler(watchdog.events.PatternMatchingEventHandler):
         items = dhyana.detect_objects(snap)
         people = list(filter(lambda item: item.name == "Person", items))
         if len(people) > 0:
-            dhyana.mark_person(snap, people[0])
+            snap_alert = dhyana.mark_person(snap, people[0])
+            dhyana.push_notification("Alert!", "Intrusion alert!", dhyana.encodeSnapBase64(snap_alert))
 
     
 repo = os.path.expanduser('~/Desktop/Snaps')

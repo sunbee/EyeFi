@@ -1,6 +1,9 @@
 from google.cloud import vision
+import requests
 from cv2 import *
+import config
 import os
+import base64
 
 def detect_objects(snap):
     """
@@ -60,6 +63,7 @@ def mark_person(snap, annot, switch_format=True):
     if switch_format:
         snap = snap.replace("png", "jpeg")
     cv2.imwrite(snap, frame)
+    return snap
 
 def send_notification(snap, message):
     """
@@ -69,7 +73,23 @@ def send_notification(snap, message):
     The subscriber can then use Telegram 
     to get the surveillance footage.
     """
+    snapb64 = encodeSnapBase64(snap)
+    push_notification("Alert!", "Intrusion Alert!", snapb64)
     pass
 
 
+def encodeSnapBase64(snap):
+    with open(snap, 'rb') as img:
+        return ", ".join(('data:image/jpeg;base64', base64.b64encode(img.read()).decode('utf-8')))
 
+def push_notification(title, message, picture=""):
+    packet = {
+        "k": config.pushkey,    # API key
+        "m": message,           # message
+        "t": title,             # title
+        "i": "98",              # icon no.  1-98
+        "s": "28",              # sound no. 0-28
+        "v": "3",               # vibr mode 0-3
+        "p": picture
+    }
+    r = requests.post("https://pushsafer.com:443/api", data=packet)

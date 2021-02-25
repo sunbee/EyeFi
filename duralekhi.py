@@ -46,4 +46,15 @@ def snap(update, context):
 snap_handler = CommandHandler('snap', snap)
 dispatcher.add_handler(snap_handler)
 
+def alert(update, context):
+    """
+    Use: snap_alert = max(glob.glob(os.path.join(repo, '*.jpeg')), key=os.path.getctime)
+    """
+    snaps = glob.glob(os.path.join(repo, '*.jpeg'))
+    if len(snaps) > 0:
+        snap_alert = max(snaps, key=os.path.getctime)
+        context.bot.send_photo(chat_id=update.effective_chat.id, photo=open(snap_alert, 'rb'))
+    else:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Nothing to see here.")
+
 updater.start_polling()
