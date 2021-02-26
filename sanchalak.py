@@ -23,7 +23,7 @@ class Handler(watchdog.events.PatternMatchingEventHandler):
         people = list(filter(lambda item: item.name == "Person", items))
         if len(people) > 0:
             snap_alert = dhyana.mark_person(snap, people[0])
-            dhyana.push_notification("Alert!", "Intrusion alert!", dhyana.encodeSnapBase64(snap_alert))
+            dhyana.send_notification(snap_alert, "Intrusion detected.")
 
     
 repo = os.path.expanduser('~/Desktop/Snaps')

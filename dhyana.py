@@ -74,13 +74,11 @@ def send_notification(snap, message):
     to get the surveillance footage.
     """
     snapb64 = encodeSnapBase64(snap)
-    push_notification("Alert!", "Intrusion Alert!", snapb64)
-    pass
-
+    push_notification("Alert!", message, snapb64)
 
 def encodeSnapBase64(snap):
     with open(snap, 'rb') as img:
-        return ", ".join(('data:image/jpeg;base64', base64.b64encode(img.read()).decode('utf-8')))
+        return ",".join(('data:image/jpeg;base64', base64.b64encode(img.read()).decode('utf-8')))
 
 def push_notification(title, message, picture=""):
     packet = {
