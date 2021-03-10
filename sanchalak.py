@@ -3,7 +3,8 @@ import watchdog.observers
 import time
 import os
 
-import dhyana
+#import dhyana
+import parayana
 
 class Handler(watchdog.events.PatternMatchingEventHandler):
     def __init__(self):
@@ -19,14 +20,20 @@ class Handler(watchdog.events.PatternMatchingEventHandler):
     def on_modified(self, event):
         snap = event.src_path
         print(f"Modified snap {snap}.")
+        sense = pX.sense_presence(snap=snap)
+        if len(list(filter(lambda x: x < 0.005, sense))) > 0:
+            print(f"Intruder alert! Got: {sense}.")
+        print()
+        """
         items = dhyana.detect_objects(snap)
         people = list(filter(lambda item: item.name == "Person", items))
         if len(people) > 0:
             snap_alert = dhyana.mark_person(snap, people[0])
             dhyana.send_notification(snap_alert, "Intrusion detected.")
+        """
 
-    
 repo = os.path.expanduser('~/Desktop/Snaps')
+pX = parayana.PresenceX(repo)
 event_handler = Handler()
 observer = watchdog.observers.Observer()
 

@@ -1,5 +1,7 @@
+numpy
+scipy
+pillow
 requests
 telegram
 python-telegram-bot
-google-cloud-vision
 watchdog
