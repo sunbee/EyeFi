@@ -12,6 +12,7 @@ class netraMAC:
         snaps_set_size (int) is the number of snaps in the collection.
         interval (int) is the number of seconds between successive snaps.
         span (int) is the length of time (in seconds) before program quits.
+        baseline (int) is number of still images to use in baseline for presence detection.
         """
         self.repo = repo
         self.size = size
