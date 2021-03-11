@@ -10,4 +10,4 @@ RUN         pip install -r requirements.txt
 
 COPY        . /app
 
-CMD         ["python3", "duralekhi.py"]
+CMD         ["python3", "duralekhi.py", "&&", "python3", "sanchalak.py"]
