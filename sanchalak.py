@@ -34,6 +34,7 @@ class Handler(watchdog.events.PatternMatchingEventHandler):
 
 repo = os.path.expanduser('~/Desktop/Snaps')
 pX = parayana.PresenceX(repo)
+PAI = parayana.PresenceX()
 event_handler = Handler()
 observer = watchdog.observers.Observer()
 
