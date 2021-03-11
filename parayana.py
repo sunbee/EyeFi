@@ -6,7 +6,9 @@ import scipy.stats as scs
 import base64
 import requests
 import json
+from datetime import datetime, timedelta
 import config
+
 
 class PresenceX:
     def __init__(self, repo, sample_size=999, scale_factor=3):
@@ -52,13 +54,18 @@ class PresenceX:
         3. For each image: open, convert to grayscale, reduce size, flatten, sample.
         The resulting list of numpy arrays is stored as an object attribute.
         """
-        snaps = glob.glob(os.path.join(self.repo, '*.png'))
-        snaps_baseline = list(filter(lambda snap: 'baseline' in os.path.basename(snap), snaps))
-        if len(snaps_baseline) < 3:
-            raise("Found no snaps to establish baseline. Quitting.")
+        tic = datetime.now()
+        while True:
+            toc = datetime.now()
+            snaps = glob.glob(os.path.join(self.repo, '*.png'))
+            snaps_baseline = list(filter(lambda snap: 'baseline' in os.path.basename(snap), snaps))
+            if len(snaps_baseline) < 3:
+                continue
+            if (toc-tic).seconds > 60: # Wait 60s
+                raise("Found no snaps to establish baseline. Quitting.")
     
-        baseline = [self._sample_random(snap) for snap in snaps_baseline]
-        return baseline # List of numpy arrays.
+            baseline = [self._sample_random(snap) for snap in snaps_baseline]
+            return baseline # List of numpy arrays.
 
     def sense_presence(self, snap):
         """
@@ -122,6 +129,32 @@ class Snap:
             return None
 
         return self.snap_mark(bb)
+    
+    def send_notification(self, message):
+        """
+        Send a push notification to the subscriber
+        containing the orignal snap and a message. 
+        The subscriber can then use Telegram 
+        to get the surveillance footage.
+        """
+        snapb64 = self._encodeSnapBase64()
+        self._push_notification("Alert!", message)
+
+    def _encodeSnapBase64(self):
+        with open(self.full_name, 'rb') as img:
+            return ",".join(('data:image/jpeg;base64', base64.b64encode(img.read()).decode('utf-8')))
+
+    def _push_notification(self, title, message):
+        packet = {
+            "k": config.pushkey,    # API key
+            "m": message,           # message
+            "t": title,             # title
+            "i": "98",              # icon no.  1-98
+            "s": "28",              # sound no. 0-28
+            "v": "3",               # vibr mode 0-3
+            "p": self._encodeSnapBase64()
+        }
+        r = requests.post("https://pushsafer.com:443/api", data=packet)
 
 class PresenceAI:
     def __init__(self):

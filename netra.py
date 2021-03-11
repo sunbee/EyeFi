@@ -3,6 +3,7 @@ import cv2
 import time
 from datetime import datetime, timedelta
 import os
+import glob
 
 class netraMAC:
     def __init__(self, repo, size=9, interval=6, span=600, baseline=3):
@@ -20,7 +21,17 @@ class netraMAC:
         self.span = span
         self.baseline = baseline
 
+    def _clean_repo(self):
+        snaps = glob.glob(os.path.join(self.repo, '*.png'))
+        if not snaps:
+            return None
+        snaps_baseline = list(filter(lambda snap: 'baseline' in os.path.basename(snap), snaps))
+        if not snaps_baseline:
+            return None
+        [os.remove(snap) for snap in snaps_baseline]
+
     def activate(self):
+        self._clean_repo()
         eye = cv2.VideoCapture(0)
         snap_number = 0
         t_start = datetime.now()
